@@ -21,6 +21,15 @@
         android:letterSpacing="0.05"
         android:layout_marginBottom="20dp" />
 
+    <Button
+        android:id="@+id/btnEnableAccessibility"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Enable Blocking Service"
+        android:backgroundTint="@color/accent_red"
+        android:textColor="@color/text_primary"
+        android:layout_marginTop="8dp" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,14 +46,15 @@
         android:orientation="vertical"
         android:layout_marginTop="8dp" />
 
-    <Button
-        android:id="@+id/btnEnableAccessibility"
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Enable Blocking Service"
-        android:backgroundTint="@color/accent_red"
-        android:textColor="@color/text_primary"
-        android:layout_marginTop="8dp" />
+        android:text="CUSTOM BLOCK"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="@color/accent_amber"
+        android:letterSpacing="0.05"
+        android:layout_marginBottom="20dp" />
 
     <TextView
         android:layout_width="wrap_content"

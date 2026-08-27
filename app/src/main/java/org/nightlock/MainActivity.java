@@ -57,6 +57,8 @@ public class MainActivity extends Activity {
     private List<AppInfo> apps;
     private AppListAdapter adapter;
 
+    private static final String PREF_SAVE_LOCKED_UNTIL = "save_locked_until";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +91,7 @@ public class MainActivity extends Activity {
             }, endHour, endMinute, false).show();
         });
 
-        btnSave.setOnClickListener(v -> saveSettings());
+        btnSave.setOnClickListener(v -> confirmAndSave());
 
         btnEnableAccessibility.setOnClickListener(v -> openAccessibilitySettings());
 
@@ -116,6 +118,7 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         updateAccessibilityButtonState();
+        updateSaveButtonState();
     }
 
     // Builds the fixed, non-editable "always blocked" rows above the search bar
@@ -211,6 +214,28 @@ public class MainActivity extends Activity {
         return appList;
     }
 
+        private void confirmAndSave() {
+        boolean anyChecked = false;
+        for (AppInfo app : apps) {
+            if (app.isChecked) {
+                anyChecked = true;
+                break;
+            }
+        }
+
+        if (!anyChecked) {
+            Toast.makeText(this, "Please select at least one app to block", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle("Confirm Time Range")
+                .setMessage("Once saved, this time range cannot be changed for 24 hours. Are you sure?")
+                .setPositiveButton("Save", (dialog, which) -> saveSettings())
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
     private void saveSettings() {
         Set<String> blockedPackages = new HashSet<>();
         for (AppInfo app : apps) {
@@ -226,9 +251,28 @@ public class MainActivity extends Activity {
         editor.putInt("end_hour", endHour);
         editor.putInt("end_minute", endMinute);
         editor.putStringSet("blocked_packages", blockedPackages);
+
+        long lockUntil = System.currentTimeMillis() + (24 * 60 * 60 * 1000L);
+        editor.putLong(PREF_SAVE_LOCKED_UNTIL, lockUntil);
         editor.apply();
 
         Toast.makeText(this, "Saved: " + blockedPackages.size() + " apps blocked", Toast.LENGTH_SHORT).show();
+        updateSaveButtonState();
+    }
+
+    private void updateSaveButtonState() {
+        SharedPreferences prefs = getSharedPreferences("NightlockPrefs", MODE_PRIVATE);
+        long lockUntil = prefs.getLong(PREF_SAVE_LOCKED_UNTIL, 0);
+        long now = System.currentTimeMillis();
+
+        if (now < lockUntil) {
+            btnSave.setEnabled(false);
+            long minutesLeft = (lockUntil - now) / 60000;
+            btnSave.setText("Locked (" + (minutesLeft / 60) + "h " + (minutesLeft % 60) + "m left)");
+        } else {
+            btnSave.setEnabled(true);
+            btnSave.setText("Save Time Range");
+        }
     }
 
     private void loadSavedSettings() {
