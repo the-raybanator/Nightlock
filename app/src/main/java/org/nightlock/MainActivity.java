@@ -30,6 +30,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Calendar;
 
 public class MainActivity extends Activity {
 
@@ -56,6 +57,9 @@ public class MainActivity extends Activity {
 
     private List<AppInfo> apps;
     private AppListAdapter adapter;
+
+    private android.os.Handler refreshHandler = new android.os.Handler();
+    private Runnable refreshRunnable;
 
     private static final String PREF_SAVE_LOCKED_UNTIL = "save_locked_until";
 
@@ -119,6 +123,13 @@ public class MainActivity extends Activity {
         super.onResume();
         updateAccessibilityButtonState();
         updateSaveButtonState();
+        startAutoRefresh();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopAutoRefresh();
     }
 
     // Builds the fixed, non-editable "always blocked" rows above the search bar
@@ -189,9 +200,6 @@ public class MainActivity extends Activity {
         PackageManager pm = getPackageManager();
         List<ApplicationInfo> installedApps = pm.getInstalledApplications(PackageManager.GET_META_DATA);
 
-        Set<String> alwaysBlockedSet = new HashSet<>();
-        Collections.addAll(alwaysBlockedSet, ALWAYS_BLOCKED_PACKAGES);
-
         for (ApplicationInfo appInfo : installedApps) {
             String packageName = appInfo.packageName;
 
@@ -252,7 +260,7 @@ public class MainActivity extends Activity {
         editor.putInt("end_minute", endMinute);
         editor.putStringSet("blocked_packages", blockedPackages);
 
-        long lockUntil = System.currentTimeMillis() + (24 * 60 * 60 * 1000L);
+        long lockUntil = calculateNextOccurrence(endHour, endMinute);
         editor.putLong(PREF_SAVE_LOCKED_UNTIL, lockUntil);
         editor.apply();
 
@@ -260,19 +268,49 @@ public class MainActivity extends Activity {
         updateSaveButtonState();
     }
 
-    private void updateSaveButtonState() {
+        private void updateSaveButtonState() {
         SharedPreferences prefs = getSharedPreferences("NightlockPrefs", MODE_PRIVATE);
         long lockUntil = prefs.getLong(PREF_SAVE_LOCKED_UNTIL, 0);
         long now = System.currentTimeMillis();
 
-        if (now < lockUntil) {
-            btnSave.setEnabled(false);
-            long minutesLeft = (lockUntil - now) / 60000;
-            btnSave.setText("Locked (" + (minutesLeft / 60) + "h " + (minutesLeft % 60) + "m left)");
+        boolean isLocked = now < lockUntil;
+
+        btnSave.setEnabled(!isLocked);
+        btnStartTime.setEnabled(!isLocked);
+        btnEndTime.setEnabled(!isLocked);
+
+        if (isLocked) {
+            btnSave.setText("Cannot change until " + formatSavedEndTime());
         } else {
-            btnSave.setEnabled(true);
             btnSave.setText("Save Time Range");
         }
+    }
+
+    private long calculateNextOccurrence(int hour, int minute) {
+        Calendar target = Calendar.getInstance();
+        target.set(Calendar.HOUR_OF_DAY, hour);
+        target.set(Calendar.MINUTE, minute);
+        target.set(Calendar.SECOND, 0);
+        target.set(Calendar.MILLISECOND, 0);
+
+        if (target.getTimeInMillis() <= System.currentTimeMillis()) {
+            // That time has already passed today — so it means tomorrow
+            target.add(Calendar.DAY_OF_YEAR, 1);
+        }
+
+        return target.getTimeInMillis();
+    }
+
+    private String formatSavedEndTime() {
+        SharedPreferences prefs = getSharedPreferences("NightlockPrefs", MODE_PRIVATE);
+        int hour = prefs.getInt("end_hour", 7);
+        int minute = prefs.getInt("end_minute", 0);
+
+        String amPm = hour >= 12 ? "PM" : "AM";
+        int displayHour = hour % 12;
+        if (displayHour == 0) displayHour = 12;
+
+        return String.format("%d:%02d %s", displayHour, minute, amPm);
     }
 
     private void loadSavedSettings() {
@@ -289,5 +327,20 @@ public class MainActivity extends Activity {
         for (AppInfo app : apps) {
             app.isChecked = blockedPackages.contains(app.packageName);
         }
+    }
+
+    private void startAutoRefresh() {
+        refreshRunnable = new Runnable() {
+            @Override
+            public void run() {
+                updateSaveButtonState();
+                refreshHandler.postDelayed(this, 30000); // check every 30 seconds
+            }
+        };
+        refreshHandler.post(refreshRunnable);
+    }
+
+    private void stopAutoRefresh() {
+        refreshHandler.removeCallbacks(refreshRunnable);
     }
 }
