@@ -39,10 +39,13 @@ public class MainActivity extends Activity {
             "com.google.android.youtube",
             "com.vivaldi.browser",
             "com.instagram.android",
-            "com.snapchat.android"
+            "com.snapchat.android",
+            "com.android.chrome",
+            "com.google.android.googlequicksearchbox",
+            "org.mozilla.firefox"
     };
     public static final String[] ALWAYS_BLOCKED_NAMES = {
-            "YouTube", "Vivaldi", "Instagram", "Snapchat"
+            "YouTube", "Vivaldi", "Instagram", "Snapchat", "Chrome", "Google", "Firefox"
     };
 
     private int startHour = 22, startMinute = 0;
@@ -137,16 +140,29 @@ public class MainActivity extends Activity {
         mostUsedContainer.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(this);
 
-        for (String name : ALWAYS_BLOCKED_NAMES) {
+        int count = Math.min(ALWAYS_BLOCKED_PACKAGES.length, ALWAYS_BLOCKED_NAMES.length);
+        for (int i = 0; i < count; i++) {
+            // Skip apps that aren't installed on this phone
+            if (!isPackageInstalled(ALWAYS_BLOCKED_PACKAGES[i])) continue;
+
             View row = inflater.inflate(R.layout.app_list_item, mostUsedContainer, false);
             CheckBox checkBox = row.findViewById(R.id.appCheckBox);
             TextView nameText = row.findViewById(R.id.appNameText);
 
-            nameText.setText(name);
+            nameText.setText(ALWAYS_BLOCKED_NAMES[i]);
             checkBox.setChecked(true);
             checkBox.setEnabled(false);
 
             mostUsedContainer.addView(row);
+        }
+    }
+
+    private boolean isPackageInstalled(String packageName) {
+        try {
+            getPackageManager().getPackageInfo(packageName, 0);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
         }
     }
 
