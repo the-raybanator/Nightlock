@@ -1,0 +1,22 @@
+R_DEF: Internal format may change without notice
+local
+color accent_amber
+color accent_red
+color background_dark
+color surface_dark
+color text_primary
+color text_secondary
+id appCheckBox
+id appNameText
+id appRecyclerView
+id btnEnableAccessibility
+id btnEndTime
+id btnSave
+id btnStartTime
+id mostUsedContainer
+id searchInput
+layout activity_main
+layout app_list
+layout app_list_item
+string app_name
+xml accessibility_service_config

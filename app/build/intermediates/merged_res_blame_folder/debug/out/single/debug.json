@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "C:\\Users\\rayyan\\.gradle\\daemon\\8.7\\org.nightlock.app-merged_res-22:\\layout_app_list_item.xml.flat",
+        "source": "C:\\Users\\rayyan\\.gradle\\daemon\\8.7\\org.nightlock.app-main-24:\\layout\\app_list_item.xml"
+    },
+    {
+        "merged": "org.nightlock.app-merged_res-22:/layout_activity_main.xml.flat",
+        "source": "org.nightlock.app-main-24:/layout/activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\rayyan\\.gradle\\daemon\\8.7\\org.nightlock.app-merged_res-22:\\xml_accessibility_service_config.xml.flat",
+        "source": "C:\\Users\\rayyan\\.gradle\\daemon\\8.7\\org.nightlock.app-main-24:\\xml\\accessibility_service_config.xml"
+    },
+    {
+        "merged": "C:\\Users\\rayyan\\.gradle\\daemon\\8.7\\org.nightlock.app-merged_res-22:\\layout_app_list.xml.flat",
+        "source": "C:\\Users\\rayyan\\.gradle\\daemon\\8.7\\org.nightlock.app-main-24:\\layout\\app_list.xml"
+    },
+    {
+        "merged": "C:\\Users\\rayyan\\.gradle\\daemon\\8.7\\org.nightlock.app-merged_res-22:\\layout_activity_main.xml.flat",
+        "source": "C:\\Users\\rayyan\\.gradle\\daemon\\8.7\\org.nightlock.app-main-24:\\layout\\activity_main.xml"
+    }
+]

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_dark">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@color/background_dark">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="NIGHTBLOCK"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="@color/accent_amber"
+        android:letterSpacing="0.05"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ALWAYS BLOCKED \u2014 10 PM to 9 AM"
+        android:textSize="12sp"
+        android:textColor="@color/accent_red"
+        android:letterSpacing="0.05"
+        android:layout_marginTop="24dp" />
+
+    <LinearLayout
+        android:id="@+id/mostUsedContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="8dp" />
+
+    <Button
+        android:id="@+id/btnEnableAccessibility"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Enable Blocking Service"
+        android:backgroundTint="@color/accent_red"
+        android:textColor="@color/text_primary"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LOCK START TIME"
+        android:textSize="12sp"
+        android:textColor="@color/text_secondary"
+        android:letterSpacing="0.1" />
+
+    <Button
+        android:id="@+id/btnStartTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Start Time"
+        android:backgroundTint="@color/surface_dark"
+        android:textColor="@color/text_primary"
+        android:layout_marginTop="6dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LOCK END TIME"
+        android:textSize="12sp"
+        android:textColor="@color/text_secondary"
+        android:letterSpacing="0.1"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/btnEndTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select End Time"
+        android:backgroundTint="@color/surface_dark"
+        android:textColor="@color/text_primary"
+        android:layout_marginTop="6dp" />
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save Time Range"
+        android:backgroundTint="@color/accent_amber"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ALL APPS"
+        android:textSize="12sp"
+        android:textColor="@color/text_secondary"
+        android:letterSpacing="0.1"
+        android:layout_marginTop="24dp" />
+
+    <EditText
+        android:id="@+id/searchInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Search apps..."
+        android:textColorHint="@color/text_secondary"
+        android:textColor="@color/text_primary"
+        android:backgroundTint="@color/accent_amber"
+        android:layout_marginTop="8dp"
+        android:inputType="text" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/appRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="8dp" />
+
+</LinearLayout>
+</ScrollView>
